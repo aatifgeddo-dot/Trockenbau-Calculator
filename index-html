@@ -1,1 +1,731 @@
 
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b2f5b">
+<title>RENASS TROCKENBAU | Rechner</title>
+
+<style>
+:root {
+  --blue: #0b2f5b;
+  --blue2: #174777;
+  --red: #c51f35;
+  --red-light: #fdebed;
+  --white: #fff;
+  --bg: #f3f6fb;
+  --border: #dfe7f1;
+  --text: #20344d;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+header {
+  background: var(--blue);
+  color: white;
+  padding: 22px 16px;
+  border-bottom: 4px solid var(--red);
+}
+
+.header-inner {
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.logo span {
+  color: #ff9da7;
+}
+
+header p {
+  color: #dce7f4;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+nav a {
+  text-decoration: none;
+  color: white;
+  font-size: 13px;
+  padding: 9px 11px;
+  border-radius: 8px;
+}
+
+nav a:hover {
+  background: var(--blue2);
+}
+
+main {
+  max-width: 1000px;
+  padding: 30px 15px;
+  margin: auto;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.hero h1 {
+  color: var(--blue);
+  font-size: clamp(26px, 5vw, 38px);
+  margin-bottom: 10px;
+}
+
+.hero p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.tab {
+  padding: 12px 17px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--blue);
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.tab.active {
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+
+.panel {
+  display: none;
+}
+
+.panel.active {
+  display: block;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 23px;
+  max-width: 440px;
+  margin: auto;
+  box-shadow: 0 12px 35px rgba(11,47,91,.08);
+}
+
+.card h2 {
+  color: var(--blue);
+  font-size: 21px;
+  margin-bottom: 17px;
+}
+
+.display {
+  background: #edf3fa;
+  padding: 17px;
+  border-radius: 12px;
+  text-align: right;
+  margin-bottom: 16px;
+  min-height: 105px;
+  overflow-wrap: anywhere;
+}
+
+.display small {
+  display: block;
+  color: #718096;
+  margin-bottom: 8px;
+}
+
+.previous {
+  color: #718096;
+  font-size: 14px;
+  min-height: 18px;
+}
+
+.current {
+  color: var(--blue);
+  font-size: 35px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.keys {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+button {
+  font-family: inherit;
+}
+
+.key {
+  min-height: 52px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--blue);
+  font-size: 19px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .15s;
+}
+
+.key:hover {
+  background: #edf3fa;
+}
+
+.key:active {
+  transform: scale(.96);
+}
+
+.key.op {
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+
+.key.clear {
+  background: var(--red-light);
+  color: var(--red);
+  border-color: #f3c5cc;
+}
+
+.key.equal {
+  background: var(--red);
+  color: white;
+  border-color: var(--red);
+}
+
+.key.zero {
+  grid-column: span 2;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--blue);
+  margin: 14px 0 7px;
+}
+
+input, select {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: white;
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px #0b2f5b16;
+}
+
+.primary-btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px;
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: var(--blue2);
+}
+
+.result {
+  margin-top: 18px;
+  padding: 17px;
+  background: #edf3fa;
+  border-left: 4px solid var(--red);
+  border-radius: 9px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.result strong {
+  color: var(--blue);
+  font-size: 22px;
+}
+
+.hint {
+  margin-top: 14px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #718096;
+}
+
+footer {
+  background: white;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 22px 12px;
+  color: #718096;
+  font-size: 13px;
+  margin-top: 20px;
+}
+
+footer strong {
+  color: var(--blue);
+}
+
+@media(max-width: 520px) {
+  .header-inner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  nav {
+    width: 100%;
+  }
+
+  nav a {
+    padding: 8px;
+  }
+
+  main {
+    padding: 24px 12px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .key {
+    min-height: 49px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="logo">RENASS <span>TROCKENBAU</span></div>
+      <p>Hannover · Niedersachsen</p>
+    </div>
+    <nav>
+      <a href="#rechner" onclick="showPanel('rechner')">Rechner</a>
+      <a href="#flaeche" onclick="showPanel('flaeche')">Fläche</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>RENASS Rechner</h1>
+    <p>Einfach rechnen und Flächen für Trockenbau berechnen.</p>
+  </section>
+
+  <div class="tabs">
+    <button class="tab active" id="tab-rechner"
+      onclick="showPanel('rechner')">🧮 Taschenrechner</button>
+    <button class="tab" id="tab-flaeche"
+      onclick="showPanel('flaeche')">📐 Flächenrechner</button>
+  </div>
+
+  <!-- NORMALER TASCHENRECHNER -->
+  <section class="panel active" id="rechner">
+    <div class="card">
+      <h2>Taschenrechner</h2>
+
+      <div class="display" aria-live="polite">
+        <small>ERGEBNIS</small>
+        <div class="previous" id="previous"></div>
+        <div class="current" id="current">0</div>
+      </div>
+
+      <div class="keys" id="keys">
+        <button class="key clear" data-action="clear">AC</button>
+        <button class="key" data-action="sign">±</button>
+        <button class="key" data-action="percent">%</button>
+        <button class="key op" data-op="/">÷</button>
+
+        <button class="key" data-num="7">7</button>
+        <button class="key" data-num="8">8</button>
+        <button class="key" data-num="9">9</button>
+        <button class="key op" data-op="*">×</button>
+
+        <button class="key" data-num="4">4</button>
+        <button class="key" data-num="5">5</button>
+        <button class="key" data-num="6">6</button>
+        <button class="key op" data-op="-">−</button>
+
+        <button class="key" data-num="1">1</button>
+        <button class="key" data-num="2">2</button>
+        <button class="key" data-num="3">3</button>
+        <button class="key op" data-op="+">+</button>
+
+        <button class="key zero" data-num="0">0</button>
+        <button class="key" data-action="decimal">,</button>
+        <button class="key" data-action="backspace">⌫</button>
+        <button class="key equal" data-action="equals">=</button>
+      </div>
+
+      <p class="hint">
+        Tastatur: Zahlen, +, −, *, /, Enter und Escape.
+      </p>
+    </div>
+  </section>
+
+  <!-- FLAECHENRECHNER -->
+  <section class="panel" id="flaeche">
+    <div class="card">
+      <h2>Flächenrechner</h2>
+      <p class="hint">
+        Berechne die Fläche einer Wand oder einer Decke in Quadratmetern.
+      </p>
+
+      <label for="type">Bereich</label>
+      <select id="type">
+        <option value="Wand">Wand</option>
+        <option value="Decke">Decke</option>
+        <option value="Boden">Boden</option>
+      </select>
+
+      <label for="length">Länge in Metern</label>
+      <input id="length" type="number" min="0" step="0.01"
+        placeholder="z. B. 5.00">
+
+      <label for="width">Breite oder Höhe in Metern</label>
+      <input id="width" type="number" min="0" step="0.01"
+        placeholder="z. B. 2.50">
+
+      <label for="count">Anzahl gleicher Flächen</label>
+      <input id="count" type="number" min="1" step="1" value="1">
+
+      <label for="openings">Abzuziehende Öffnungen in m²</label>
+      <input id="openings" type="number" min="0" step="0.01"
+        value="0" placeholder="z. B. Türen und Fenster">
+
+      <button class="primary-btn" onclick="calculateArea()">
+        Fläche berechnen
+      </button>
+
+      <div class="result" id="areaResult" aria-live="polite">
+        Dein Ergebnis erscheint hier.
+      </div>
+
+      <p class="hint">
+        Hinweis: Dies ist eine Flächenberechnung, kein verbindliches Angebot.
+        Materialbedarf und Verschnitt müssen zusätzlich berücksichtigt werden.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © <span id="year"></span>
+  <strong>RENASS TROCKENBAU</strong> · Hannover
+</footer>
+
+<script>
+"use strict";
+
+/* NAVIGATION */
+function showPanel(name) {
+  document.querySelectorAll(".panel").forEach(function(panel) {
+    panel.classList.toggle("active", panel.id === name);
+  });
+
+  document.querySelectorAll(".tab").forEach(function(tab) {
+    tab.classList.toggle("active", tab.id === "tab-" + name);
+  });
+}
+
+/* TASCHENRECHNER */
+const currentDisplay = document.getElementById("current");
+const previousDisplay = document.getElementById("previous");
+
+let current = "0";
+let previous = null;
+let operator = null;
+let waiting = false;
+let calculated = false;
+
+function formatNumber(n) {
+  if (!Number.isFinite(n)) return "Fehler";
+  return String(Number(n.toPrecision(12))).replace(".", ",");
+}
+
+function render() {
+  currentDisplay.textContent = current === "Fehler"
+    ? "Fehler" : formatNumber(Number(current));
+
+  const symbols = {"+": "+", "-": "−", "*": "×", "/": "÷"};
+
+  if (operator !== null && previous !== null) {
+    previousDisplay.textContent =
+      formatNumber(previous) + " " + symbols[operator];
+  } else {
+    previousDisplay.textContent = "";
+  }
+}
+
+function clearCalc() {
+  current = "0";
+  previous = null;
+  operator = null;
+  waiting = false;
+  calculated = false;
+  render();
+}
+
+function inputNumber(n) {
+  if (current === "Fehler") clearCalc();
+
+  if (waiting || calculated) {
+    current = n;
+    waiting = false;
+    calculated = false;
+  } else if (current.replace("-", "").replace(".", "").length < 14) {
+    current = current === "0" ? n : current + n;
+  }
+  render();
+}
+
+function inputDecimal() {
+  if (current === "Fehler") clearCalc();
+
+  if (waiting || calculated) {
+    current = "0.";
+    waiting = false;
+    calculated = false;
+  } else if (!current.includes(".")) {
+    current += ".";
+  }
+  render();
+}
+
+function calculate(a, b, op) {
+  if (op === "+") return a + b;
+  if (op === "-") return a - b;
+  if (op === "*") return a * b;
+  if (op === "/") return b === 0 ? NaN : a / b;
+  return b;
+}
+
+function chooseOperator(op) {
+  if (current === "Fehler") return;
+
+  const value = Number(current);
+
+  if (operator !== null && !waiting) {
+    const result = calculate(previous, value, operator);
+
+    if (!Number.isFinite(result)) {
+      current = "Fehler";
+      previous = null;
+      operator = null;
+      waiting = true;
+      render();
+      return;
+    }
+
+    current = String(Number(result.toPrecision(12)));
+    previous = Number(current);
+  } else {
+    previous = value;
+  }
+
+  operator = op;
+  waiting = true;
+  calculated = false;
+  render();
+}
+
+function equals() {
+  if (operator === null || previous === null ||
+      waiting || current === "Fehler") return;
+
+  const a = previous;
+  const b = Number(current);
+  const op = operator;
+  const result = calculate(a, b, op);
+  const symbols = {"+": "+", "-": "−", "*": "×", "/": "÷"};
+
+  previousDisplay.textContent =
+    formatNumber(a) + " " + symbols[op] + " " +
+    formatNumber(b) + " =";
+
+  current = Number.isFinite(result)
+    ? String(Number(result.toPrecision(12)))
+    : "Fehler";
+
+  previous = null;
+  operator = null;
+  waiting = true;
+  calculated = true;
+  render();
+}
+
+function toggleSign() {
+  if (current === "Fehler" || Number(current) === 0) return;
+  current = String(-Number(current));
+  calculated = false;
+  render();
+}
+
+function percent() {
+  if (current === "Fehler") return;
+  current = String(Number(current) / 100);
+  calculated = false;
+  render();
+}
+
+function backspace() {
+  if (waiting || calculated || current === "Fehler") {
+    current = "0";
+    waiting = false;
+    calculated = false;
+  } else {
+    current = current.length > 1 ? current.slice(0, -1) : "0";
+    if (current === "-") current = "0";
+  }
+  render();
+}
+
+document.getElementById("keys").addEventListener("click", function(e) {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+
+  if (btn.dataset.num !== undefined) {
+    inputNumber(btn.dataset.num);
+  } else if (btn.dataset.op) {
+    chooseOperator(btn.dataset.op);
+  } else {
+    switch (btn.dataset.action) {
+      case "clear": clearCalc(); break;
+      case "decimal": inputDecimal(); break;
+      case "equals": equals(); break;
+      case "sign": toggleSign(); break;
+      case "percent": percent(); break;
+      case "backspace": backspace(); break;
+    }
+  }
+});
+
+document.addEventListener("keydown", function(e) {
+  if (/^[0-9]$/.test(e.key)) {
+    inputNumber(e.key);
+  } else if (e.key === "." || e.key === ",") {
+    inputDecimal();
+  } else if (["+", "-", "*", "/"].includes(e.key)) {
+    chooseOperator(e.key);
+  } else if (e.key === "Enter" || e.key === "=") {
+    e.preventDefault();
+    equals();
+  } else if (e.key === "Escape") {
+    clearCalc();
+  } else if (e.key === "Backspace") {
+    backspace();
+  } else if (e.key === "%") {
+    percent();
+  }
+});
+
+/* FLAECHENRECHNER */
+function calculateArea() {
+  const length = Number(document.getElementById("length").value);
+  const width = Number(document.getElementById("width").value);
+  const count = Number(document.getElementById("count").value);
+  const openings = Number(document.getElementById("openings").value);
+  const type = document.getElementById("type").value;
+  const result = document.getElementById("areaResult");
+
+  if (
+    document.getElementById("length").value === "" ||
+    document.getElementById("width").value === "" ||
+    !Number.isFinite(length) ||
+    !Number.isFinite(width) ||
+    !Number.isInteger(count) ||
+    !Number.isFinite(openings) ||
+    length <= 0 || width <= 0 ||
+    count < 1 || openings < 0
+  ) {
+    result.textContent =
+      "Bitte gib gültige positive Maße und eine gültige Anzahl ein.";
+    return;
+  }
+
+  const gross = length * width * count;
+  const net = gross - openings;
+
+  if (net < 0) {
+    result.textContent =
+      "Die Öffnungen dürfen nicht größer als die Gesamtfläche sein.";
+    return;
+  }
+
+  const fmt = new Intl.NumberFormat("de-DE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+  result.innerHTML =
+    "Bereich: <b></b><br>" +
+    "Gesamtfläche: <b></b> m²<br>" +
+    "Abzüge: <b></b> m²<br>" +
+    "Nettofläche: <strong></strong> m²";
+
+  const values = result.querySelectorAll("b, strong");
+  values[0].textContent = type;
+  values[1].textContent = fmt.format(gross);
+  values[2].textContent = fmt.format(openings);
+  values[3].textContent = fmt.format(net);
+}
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+render();
+</script>
+
+</body>
+</html>
+
