@@ -1,1 +1,242 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Calculator</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f4f7fb;
+    font-family: Arial, sans-serif;
+}
+
+.calculator {
+    width: 330px;
+    padding: 22px;
+    background: white;
+    border-radius: 22px;
+    border-top: 4px solid #1769aa;
+    border-bottom: 2px solid #e34b55;
+    box-shadow: 0 12px 35px rgba(20, 65, 110, 0.12);
+}
+
+.brand {
+    text-align: center;
+    color: #1769aa;
+    font-size: 21px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+.display {
+    width: 100%;
+    height: 75px;
+    border: 1px solid #dce5ef;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    padding: 15px;
+    text-align: right;
+    font-size: 30px;
+    color: #174c7e;
+    background: #f8fbff;
+    outline: none;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+button {
+    height: 58px;
+    border: 1px solid #e2eaf2;
+    border-radius: 12px;
+    background: white;
+    color: #174c7e;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button:hover {
+    background: #edf5fc;
+}
+
+.operator {
+    color: #1769aa;
+    background: #eaf3fc;
+}
+
+.clear {
+    color: #e34b55;
+    background: #fff1f2;
+}
+
+.equal {
+    background: #1769aa;
+    color: white;
+    border: none;
+}
+
+.equal:hover {
+    background: #10558d;
+}
+
+.zero {
+    grid-column: span 2;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 18px;
+    color: #9aa9b8;
+    font-size: 11px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+
+    <div class="brand">RENASS CALCULATOR</div>
+
+    <input class="display" id="display"
+           type="text" value="0" readonly>
+
+    <div class="buttons">
+
+        <button class="clear" data-action="clear">AC</button>
+        <button class="operator" data-action="delete">DEL</button>
+        <button class="operator" data-value="%">%</button>
+        <button class="operator" data-value="/">÷</button>
+
+        <button data-value="7">7</button>
+        <button data-value="8">8</button>
+        <button data-value="9">9</button>
+        <button class="operator" data-value="*">×</button>
+
+        <button data-value="4">4</button>
+        <button data-value="5">5</button>
+        <button data-value="6">6</button>
+        <button class="operator" data-value="-">−</button>
+
+        <button data-value="1">1</button>
+        <button data-value="2">2</button>
+        <button data-value="3">3</button>
+        <button class="operator" data-value="+">+</button>
+
+        <button class="zero" data-value="0">0</button>
+        <button data-value=".">.</button>
+        <button class="equal" data-action="calculate">=</button>
+
+    </div>
+
+    <div class="footer">
+        RENASS CALCULATOR © 2026
+    </div>
+
+</div>
+
+<script>
+const display = document.getElementById("display");
+const buttons = document.querySelectorAll("button");
+
+let expression = "";
+let finished = false;
+
+buttons.forEach(button => {
+    button.addEventListener("click", () => {
+
+        const value = button.dataset.value;
+        const action = button.dataset.action;
+
+        if (action === "clear") {
+            expression = "";
+            display.value = "0";
+            finished = false;
+            return;
+        }
+
+        if (action === "delete") {
+            expression = expression.slice(0, -1);
+            display.value = expression || "0";
+            finished = false;
+            return;
+        }
+
+        if (action === "calculate") {
+            try {
+                if (!expression ||
+                    !/^[0-9+\-*/%.() ]+$/.test(expression)) {
+                    return;
+                }
+
+                const result = Function(
+                    '"use strict"; return (' + expression + ')'
+                )();
+
+                if (!Number.isFinite(result)) {
+                    throw new Error("Invalid");
+                }
+
+                expression = String(
+                    Number(result.toPrecision(12))
+                );
+
+                display.value = expression;
+                finished = true;
+
+            } catch {
+                display.value = "Error";
+                expression = "";
+                finished = true;
+            }
+            return;
+        }
+
+        if (value !== undefined) {
+            if (finished) {
+                if ("0123456789.".includes(value)) {
+                    expression = "";
+                }
+                finished = false;
+            }
+
+            expression += value;
+            display.value = expression;
+        }
+    });
+});
+</script>
+
+</body>
+</html>
+
+طريقة التشغيل
+
+1. افتح حسابك في .
+2. أنشئ ملف "index.html".
+3. الصق الكود واحفظه.
+4. افتح الصفحة لتجربة الآلة الحاسبة.
+
+فكرة للتطوير: يمكن تطوير RENASS CALCULATOR لاحقاً لتشمل حساب مساحة الأسقف والجدران بالمتر المربع، وحساب مواد البناء وتكاليف العمل وإصدار الفواتير.
 
