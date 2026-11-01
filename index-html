@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modern Calculator</title>
+<title>Professional Calculator</title>
 
 <style>
 * {
@@ -17,87 +18,116 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #f4f7fb;
+    background: linear-gradient(135deg, #eaf2fa, #ffffff);
     font-family: Arial, sans-serif;
+    padding: 20px;
 }
 
 .calculator {
-    width: 330px;
-    padding: 22px;
-    background: white;
-    border-radius: 22px;
-    border-top: 4px solid #1769aa;
-    border-bottom: 2px solid #e34b55;
-    box-shadow: 0 12px 35px rgba(20, 65, 110, 0.12);
+    width: 100%;
+    max-width: 370px;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 25px;
+    box-shadow: 0 15px 45px rgba(11, 47, 91, 0.15);
+    border: 1px solid #e3eaf2;
 }
 
-.brand {
+.header {
     text-align: center;
-    color: #1769aa;
-    font-size: 21px;
-    font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
+}
+
+.header h2 {
+    color: #0b2f5b;
+    font-size: 23px;
     letter-spacing: 1px;
+}
+
+.header p {
+    color: #8997a8;
+    font-size: 12px;
+    margin-top: 6px;
 }
 
 .display {
     width: 100%;
-    height: 75px;
-    border: 1px solid #dce5ef;
-    border-radius: 12px;
-    margin-bottom: 18px;
-    padding: 15px;
-    text-align: right;
-    font-size: 30px;
-    color: #174c7e;
-    background: #f8fbff;
-    outline: none;
+    min-height: 110px;
+    background: #f1f5fa;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    overflow: hidden;
+}
+
+.previous {
+    color: #8290a1;
+    font-size: 15px;
+    min-height: 22px;
+}
+
+.current {
+    color: #0b2f5b;
+    font-size: 36px;
+    font-weight: bold;
+    max-width: 100%;
+    overflow-wrap: anywhere;
 }
 
 .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 11px;
 }
 
 button {
-    height: 58px;
-    border: 1px solid #e2eaf2;
-    border-radius: 12px;
-    background: white;
-    color: #174c7e;
-    font-size: 20px;
-    font-weight: 600;
+    height: 62px;
+    border: none;
+    border-radius: 14px;
+    background: #edf3f9;
+    color: #0b2f5b;
+    font-size: 21px;
+    font-weight: bold;
     cursor: pointer;
     transition: 0.2s;
+    box-shadow: 0 3px 6px rgba(11,47,91,0.05);
+}
+
+button:hover {
+    background: #dce8f5;
+    transform: translateY(-2px);
 }
 
 button:active {
     transform: scale(0.95);
 }
 
-button:hover {
-    background: #edf5fc;
-}
-
 .operator {
-    color: #1769aa;
-    background: #eaf3fc;
+    background: #dce9f7;
+    color: #0b2f5b;
 }
 
 .clear {
-    color: #e34b55;
-    background: #fff1f2;
+    background: #fbe8e9;
+    color: #c51f24;
+}
+
+.delete {
+    background: #fbe8e9;
+    color: #c51f24;
 }
 
 .equal {
-    background: #1769aa;
+    background: #0b2f5b;
     color: white;
-    border: none;
 }
 
 .equal:hover {
-    background: #10558d;
+    background: #174a80;
 }
 
 .zero {
@@ -106,9 +136,19 @@ button:hover {
 
 .footer {
     text-align: center;
-    margin-top: 18px;
-    color: #9aa9b8;
+    color: #9aa7b5;
     font-size: 11px;
+    margin-top: 20px;
+}
+
+@media (max-width: 400px) {
+    .calculator {
+        padding: 18px;
+    }
+
+    button {
+        height: 57px;
+    }
 }
 </style>
 </head>
@@ -117,115 +157,211 @@ button:hover {
 
 <div class="calculator">
 
-    <div class="brand">RENASS CALCULATOR</div>
+    <div class="header">
+        <h2>CALCULATOR</h2>
+        <p>Professional Digital Calculator</p>
+    </div>
 
-    <input class="display" id="display"
-           type="text" value="0" readonly>
+    <div class="display">
+        <div class="previous" id="previous"></div>
+        <div class="current" id="current">0</div>
+    </div>
 
     <div class="buttons">
 
-        <button class="clear" data-action="clear">AC</button>
-        <button class="operator" data-action="delete">DEL</button>
-        <button class="operator" data-value="%">%</button>
-        <button class="operator" data-value="/">÷</button>
+        <button class="clear" onclick="clearAll()">AC</button>
+        <button class="delete" onclick="deleteNumber()">DEL</button>
+        <button class="operator" onclick="percentage()">%</button>
+        <button class="operator" onclick="chooseOperator('/')">÷</button>
 
-        <button data-value="7">7</button>
-        <button data-value="8">8</button>
-        <button data-value="9">9</button>
-        <button class="operator" data-value="*">×</button>
+        <button onclick="appendNumber('7')">7</button>
+        <button onclick="appendNumber('8')">8</button>
+        <button onclick="appendNumber('9')">9</button>
+        <button class="operator" onclick="chooseOperator('*')">×</button>
 
-        <button data-value="4">4</button>
-        <button data-value="5">5</button>
-        <button data-value="6">6</button>
-        <button class="operator" data-value="-">−</button>
+        <button onclick="appendNumber('4')">4</button>
+        <button onclick="appendNumber('5')">5</button>
+        <button onclick="appendNumber('6')">6</button>
+        <button class="operator" onclick="chooseOperator('-')">−</button>
 
-        <button data-value="1">1</button>
-        <button data-value="2">2</button>
-        <button data-value="3">3</button>
-        <button class="operator" data-value="+">+</button>
+        <button onclick="appendNumber('1')">1</button>
+        <button onclick="appendNumber('2')">2</button>
+        <button onclick="appendNumber('3')">3</button>
+        <button class="operator" onclick="chooseOperator('+')">+</button>
 
-        <button class="zero" data-value="0">0</button>
-        <button data-value=".">.</button>
-        <button class="equal" data-action="calculate">=</button>
+        <button class="zero" onclick="appendNumber('0')">0</button>
+        <button onclick="appendDecimal()">.</button>
+        <button class="equal" onclick="calculate()">=</button>
 
     </div>
 
     <div class="footer">
-        RENASS CALCULATOR © 2026
+        Professional Calculator © 2026
     </div>
 
 </div>
 
 <script>
-const display = document.getElementById("display");
-const buttons = document.querySelectorAll("button");
 
-let expression = "";
-let finished = false;
+const currentDisplay = document.getElementById("current");
+const previousDisplay = document.getElementById("previous");
 
-buttons.forEach(button => {
-    button.addEventListener("click", () => {
+let currentNumber = "0";
+let previousNumber = null;
+let operator = null;
+let resetScreen = false;
 
-        const value = button.dataset.value;
-        const action = button.dataset.action;
+function updateDisplay() {
+    currentDisplay.textContent = currentNumber;
+}
 
-        if (action === "clear") {
-            expression = "";
-            display.value = "0";
-            finished = false;
-            return;
-        }
+function appendNumber(number) {
+    if (currentNumber === "Error") clearAll();
 
-        if (action === "delete") {
-            expression = expression.slice(0, -1);
-            display.value = expression || "0";
-            finished = false;
-            return;
-        }
+    if (resetScreen) {
+        currentNumber = number;
+        resetScreen = false;
+    } else {
+        currentNumber =
+            currentNumber === "0" ? number : currentNumber + number;
+    }
 
-        if (action === "calculate") {
-            try {
-                if (!expression ||
-                    !/^[0-9+\-*/%.() ]+$/.test(expression)) {
-                    return;
-                }
+    updateDisplay();
+}
 
-                const result = Function(
-                    '"use strict"; return (' + expression + ')'
-                )();
+function appendDecimal() {
+    if (resetScreen) {
+        currentNumber = "0";
+        resetScreen = false;
+    }
 
-                if (!Number.isFinite(result)) {
-                    throw new Error("Invalid");
-                }
+    if (!currentNumber.includes(".")) {
+        currentNumber += ".";
+    }
 
-                expression = String(
-                    Number(result.toPrecision(12))
-                );
+    updateDisplay();
+}
 
-                display.value = expression;
-                finished = true;
+function chooseOperator(op) {
+    if (currentNumber === "Error") return;
 
-            } catch {
-                display.value = "Error";
-                expression = "";
-                finished = true;
+    if (operator !== null && !resetScreen) {
+        calculate();
+    }
+
+    previousNumber = parseFloat(currentNumber);
+    operator = op;
+    previousDisplay.textContent =
+        previousNumber + " " + getSymbol(op);
+    resetScreen = true;
+}
+
+function getSymbol(op) {
+    return {
+        "+": "+",
+        "-": "−",
+        "*": "×",
+        "/": "÷"
+    }[op];
+}
+
+function calculate() {
+    if (operator === null || previousNumber === null) return;
+
+    const secondNumber = parseFloat(currentNumber);
+    let result;
+
+    switch (operator) {
+        case "+":
+            result = previousNumber + secondNumber;
+            break;
+        case "-":
+            result = previousNumber - secondNumber;
+            break;
+        case "*":
+            result = previousNumber * secondNumber;
+            break;
+        case "/":
+            if (secondNumber === 0) {
+                currentNumber = "Error";
+                previousDisplay.textContent = "Cannot divide by zero";
+                operator = null;
+                previousNumber = null;
+                resetScreen = true;
+                updateDisplay();
+                return;
             }
-            return;
-        }
+            result = previousNumber / secondNumber;
+            break;
+    }
 
-        if (value !== undefined) {
-            if (finished) {
-                if ("0123456789.".includes(value)) {
-                    expression = "";
-                }
-                finished = false;
-            }
+    previousDisplay.textContent =
+        previousNumber + " " + getSymbol(operator) +
+        " " + secondNumber + " =";
 
-            expression += value;
-            display.value = expression;
-        }
-    });
+    currentNumber = String(
+        Number.parseFloat(result.toPrecision(12))
+    );
+
+    operator = null;
+    previousNumber = null;
+    resetScreen = true;
+    updateDisplay();
+}
+
+function percentage() {
+    if (currentNumber === "Error") return;
+
+    currentNumber = String(parseFloat(currentNumber) / 100);
+    updateDisplay();
+}
+
+function deleteNumber() {
+    if (currentNumber === "Error" || resetScreen) {
+        currentNumber = "0";
+        resetScreen = false;
+    } else {
+        currentNumber =
+            currentNumber.length > 1
+            ? currentNumber.slice(0, -1)
+            : "0";
+    }
+
+    updateDisplay();
+}
+
+function clearAll() {
+    currentNumber = "0";
+    previousNumber = null;
+    operator = null;
+    resetScreen = false;
+    previousDisplay.textContent = "";
+    updateDisplay();
+}
+
+document.addEventListener("keydown", function(event) {
+    if (event.key >= "0" && event.key <= "9") {
+        appendNumber(event.key);
+    }
+
+    if (event.key === ".") appendDecimal();
+
+    if (["+", "-", "*", "/"].includes(event.key)) {
+        chooseOperator(event.key);
+    }
+
+    if (event.key === "Enter" || event.key === "=") {
+        event.preventDefault();
+        calculate();
+    }
+
+    if (event.key === "Backspace") deleteNumber();
+
+    if (event.key === "Escape") clearAll();
+
+    if (event.key === "%") percentage();
 });
+
 </script>
 
 </body>
